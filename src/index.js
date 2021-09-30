@@ -1,17 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Board } from './component/Board';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { calculateWinner } from './utility'
+
+const Game = () => {
+    // const [history, setHistory] = useState({squares: Array(9).fill(null)});
+    // const [stepNum, setStepNum] = useState(0);
+    const [xIsNext, setXIsNext] = useState(true);
+    // const [isDesc, setIsDesc] = useState(true);
+    const [squares, setSquares] = useState(Array(9).fill(''));
+
+    const fillWithXOrO = (num) => {
+        if (calculateWinner(squares) || squares[num]) {
+            console.log(squares[0]);
+            return;
+        }
+        setSquares(prevValues => {
+            prevValues[num] = xIsNext ? 'X' : 'O';
+            setXIsNext(prevXIsNext => !prevXIsNext);
+            return prevValues.concat();
+        });
+    }
+    useEffect(()=>{
+console.log(squares)
+    }, [squares])
+
+    return(
+        <div className="game">
+            <div className="game-board">
+                <Board 
+                    onClick={ fillWithXOrO }
+                    squares={ squares }
+                    xIsNext={ xIsNext }
+                />
+            </div>
+            <div className="game-info">
+                <div>{/* status */}</div>
+                <ol>{/* TODO */}</ol>
+            </div>
+
+        </div>
+    );
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    <Game />,
+    document.getElementById('root')
+  );
