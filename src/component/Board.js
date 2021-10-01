@@ -3,51 +3,44 @@ import '../index.css';
 import { Square } from './Square';
 import { calculateWinner } from '../utility';
 
-
-const RenderSquare = props => (
-    <Square 
-        onClick={ () => props.onClick(props.num) }
-        value={ props.squares[props.num] }
-    />
-);
-
 const Board = props => {
-    console.log('From Board: ', props.squares[1]);
+    const renderSquare = num => {
+        let color;
+        if (props.lines && props.lines.includes(num)) {
+            color = "text-red-300";
+        } else {
+            color = "text-black";
+        }
+        console.log(color);
+
+        return(
+            <Square 
+                onClick={ () => props.onClick(num) }
+                value={ props.squares[num] }
+                color={ color }
+            />
+        )
+    };
 
     
-    const renderSquare = num => (
-        <Square 
-            onClick={ () => props.onClick(num) }
-            value={ props.squares[num] }
-        />
-    );
-
-    
-    const winner = calculateWinner(props.squares);
+    const result = calculateWinner(props.squares);
     let status;
 
-    if (winner) {
-        status =  'Winner: ' + winner;
+    if (result.winner) {
+        status =  'Winner: ' + result.winner;
+    } else if (!result.winner && !props.squares.includes('')) {
+        status =  'Draw';
     } else {
         status = 'Next player: ' + (props.xIsNext ? 'X' : 'O');
     }
 
     return(
         <div>
-            <div className="status">{status}</div>
+            <div className="status">{ status }</div>
             <div className="board-row">
-                <RenderSquare
-                {...props}
-                num={0}
-                />
-                <RenderSquare
-                {...props}
-                num={1}
-                />
-                <RenderSquare
-                {...props}
-                num={2}
-                />
+                {renderSquare(0)}
+                {renderSquare(1)}
+                {renderSquare(2)}
             </div> 
             <div className="board-row">
                 {renderSquare(3)}

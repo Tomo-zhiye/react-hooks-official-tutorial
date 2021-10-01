@@ -5,7 +5,7 @@ const Square = props => {
     // console.log('Form Square: ', props.value);
     return (
         <button 
-            className='square'
+            className={`square ${props.color}`}
             onClick={ props.onClick }
         >
             { props.value }
